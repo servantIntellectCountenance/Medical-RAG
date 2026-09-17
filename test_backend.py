@@ -1,6 +1,6 @@
 from app.rag import MedicalRAG
 
-
+#test phase
 rag = MedicalRAG(
     index_path="data/medical_rag.index",
     documents_path="data/documents.pkl",
