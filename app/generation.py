@@ -9,7 +9,7 @@ load_dotenv()
 
 class Generator:
     def __init__(self, model="openai/gpt-oss-120b"):
-        token = os.getenv("HF_TOKEN")
+        token = os.getenv("HF_TOKEN") token = os.getenv("HF_TOKEN") or st.secrets.get("HF_TOKEN")
 
         if not token:
             raise ValueError(
