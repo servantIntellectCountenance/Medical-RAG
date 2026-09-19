@@ -1,5 +1,5 @@
 import streamlit as st
-
+from app.s3 import download_rag_data
 from app.rag import MedicalRAG
 
 
@@ -11,16 +11,17 @@ st.set_page_config(
 )
 
 
+
 # Load RAG system
 @st.cache_resource
 def load_rag():
     return MedicalRAG(
         index_path="data/medical_rag.index",
         documents_path="data/documents.pkl",
-        model_path="models/all-MiniLM-L6-v2",
+        model_path="sentence-transformers/all-MiniLM-L6-v2",
     )
 
-
+download_rag_data()
 rag = load_rag()
 
 
