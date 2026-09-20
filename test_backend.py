@@ -4,7 +4,7 @@ from app.rag import MedicalRAG
 rag = MedicalRAG(
     index_path="data/medical_rag.index",
     documents_path="data/documents.pkl",
-    model_path="models/all-MiniLM-L6-v2",
+    model_path= NONE,
 )
 
 

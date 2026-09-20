@@ -20,9 +20,6 @@ def retrieve(
         top_k,
     )
 
-    print("FAISS distances:", distances[0])
-    print("FAISS indices:", indices[0])
-
     results = self.documents.iloc[indices[0]].copy()
 
     results["distance"] = distances[0]
@@ -31,7 +28,5 @@ def retrieve(
         results = results[
             results["distance"] <= max_distance
         ]
-
-    print("Retrieved sources:", len(results))
 
     return results
