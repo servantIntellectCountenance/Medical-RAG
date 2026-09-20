@@ -4,53 +4,34 @@ import faiss
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 
+def retrieve(
+    self,
+    query,
+    top_k=5,
+    max_distance=None,
+):
+    query_embedding = self.embedding_model.encode(
+        [query],
+        convert_to_numpy=True,
+    )
 
-class Retriever:
-    def __init__(
-        self,
-        index_path,
-        documents_path,
-        model_path=None,
-    ):
-        # Load the local embedding model
-        if model_path is None:
-            model_path = (
-                Path(__file__).resolve().parent.parent
-                / "models"
-                / "all-MiniLM-L6-v2"
-            )
+    distances, indices = self.index.search(
+        query_embedding,
+        top_k,
+    )
 
-        self.embedding_model = SentenceTransformer(str(model_path))
+    print("FAISS distances:", distances[0])
+    print("FAISS indices:", indices[0])
 
-        # Load FAISS index
-        self.index = faiss.read_index(str(index_path))
+    results = self.documents.iloc[indices[0]].copy()
 
-        # Load documents
-        self.documents = pd.read_pickle(documents_path)
+    results["distance"] = distances[0]
 
-    def retrieve(
-        self,
-        query,
-        top_k=5,
-        max_distance=0.65,
-    ):
-        query_embedding = self.embedding_model.encode(
-            [query],
-            convert_to_numpy=True,
-        )
-
-        distances, indices = self.index.search(
-            query_embedding,
-            top_k,
-        )
-
-        results = self.documents.iloc[indices[0]].copy()
-
-        results["distance"] = distances[0]
-
-        # Remove weak matches
+    if max_distance is not None:
         results = results[
             results["distance"] <= max_distance
         ]
 
-        return results
+    print("Retrieved sources:", len(results))
+
+    return results
